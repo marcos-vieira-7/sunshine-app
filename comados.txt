@@ -1,0 +1,9 @@
+Criar projeto Blanck TS: 
+    npx create-expo-app -t expo-template-blank-typescript
+
+Iniciar app:
+    npx expo start
+
+
+========
+- guardar novo objeto
