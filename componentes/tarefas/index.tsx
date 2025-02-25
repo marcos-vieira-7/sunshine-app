@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         color: "#fff",
         // width: width * 0.9, // 90% da largura da tela
         // height: height * 0.3, // 30% da altura da tela
-        borderRadius: 10,
+        // borderRadius: 10,
     },
     lista: {
         margin: 10,
