@@ -4,6 +4,11 @@ Criar projeto Blanck TS:
 Iniciar app:
     npx expo start
 
+Instalar navegação entre componentes no React:
+    - npm install @react-navigation/native
+    - npm install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-vector-icons @react-native-masked-view/masked-view
+Instalar os stacks de navegação:
+    - npm install @react-navigation/stack
 
-========
+=====================
 - guardar novo objeto

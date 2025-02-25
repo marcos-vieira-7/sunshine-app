@@ -6,6 +6,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("window");
 
+import { useNavigation } from "@react-navigation/native";
+import Compras from "../compras";
+
 interface Tarefa {
     id: string;
     descricao: string;
@@ -14,12 +17,7 @@ interface Tarefa {
 export default function Tarefas() {
 
     const [descricao, setDescricao] = useState('')  ;
-    const [tarefas, setTarefas] = useState<Tarefa[]>([
-        { id: "1", descricao: "Estudar React Native" },
-        { id: "2", descricao: "Fazer exercícios físicos" },
-        { id: "3", descricao: "Ler um livro" },
-        { id: "4", descricao: "Criar um app no React Native" },
-    ]);
+    const [tarefas, setTarefas] = useState<Tarefa[]>([]);
 
     useEffect(() => {
         carregarTarefas();
@@ -80,21 +78,23 @@ export default function Tarefas() {
         ])
     }
 
+    const navigation = useNavigation();
 
     return (
-        <>
-            <View style={styles.container}>
-                {/* <Text style={styles.text}>NEW COMPONENT TASK</Text> */}
-                <TextInput
-                    style={styles.input}
-                    placeholder="Digite a descrição"
-                    value={descricao}
-                    onChangeText={setDescricao} 
-                    />
-                <Pressable onPress={adicionarTarefa} style={({pressed}) => [styles.button, {opacity: pressed ? 0.5 : 1}]}>
-                    <Text>Adicionar</Text>
-                </Pressable>
-            </View>
+        <View style={styles.container}>
+            
+            {/* <Text style={styles.text}>NEW COMPONENT TASK</Text> */}
+            {/* <Button title="Ir para Outra Tela" onPress={() => navigation.navigate("Compras")} /> */}
+            <TextInput
+                style={styles.input}
+                placeholder="Digite a descrição"
+                value={descricao}
+                onChangeText={setDescricao} 
+                />
+            <Pressable onPress={adicionarTarefa} style={({pressed}) => [styles.button, {opacity: pressed ? 0.5 : 1}]}>
+                <Text>Adicionar</Text>
+            </Pressable>
+            
             {/* Lista */}
             <View style={styles.lista}>
                 <Text style={styles.titulo}>Minhas Tarefas</Text>
@@ -105,7 +105,7 @@ export default function Tarefas() {
                         <Pressable 
                             style={styles.item}
                             onLongPress={() => removerTarefa(item.id)} //chama funcao ao tocar
-                            android_ripple={{color: "#ccc"}} //efeito de clique no android
+                            android_ripple={{color: "#ccc"}} //efeito de clique no
                         >
                             <Text style={styles.texto}>{item.descricao}</Text>
                         </Pressable>
@@ -113,23 +113,24 @@ export default function Tarefas() {
                     ItemSeparatorComponent={() => <View style={styles.separator} />}
                 />
             </View>
-        </>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: "#023047",
         color: "#fff",
-        width: width * 0.9, // 90% da largura da tela
-        height: height * 0.3, // 30% da altura da tela
+        // width: width * 0.9, // 90% da largura da tela
+        // height: height * 0.3, // 30% da altura da tela
         borderRadius: 10,
     },
     lista: {
         margin: 10,
-        width: width * 0.9,
+        width:"90%", //percentual ao inves de dimension
     },
     text: {
         color: "#fff",
@@ -137,13 +138,14 @@ const styles = StyleSheet.create({
     input: {
         backgroundColor: "#fff",
         color: "#000",
-        width: width * 0.8,
-        height: height * 0.05,
+        width: "80%", //usar percentual
+        height: 40, //fixo p nao causar problemas
         borderRadius: 10,
         padding: 10,
     },
     button: {
-        margin: 20,
+        // margin: 20,
+        width: "80%",
         padding: 10,
         backgroundColor: "#ffb703",
         borderRadius: 10,
