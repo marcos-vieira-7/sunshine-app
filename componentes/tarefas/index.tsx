@@ -16,7 +16,7 @@ interface Tarefa {
 
 export default function Tarefas() {
 
-    const [descricao, setDescricao] = useState('')  ;
+    const [descricao, setDescricao] = useState('');
     const [tarefas, setTarefas] = useState<Tarefa[]>([]);
 
     useEffect(() => {
@@ -85,16 +85,18 @@ export default function Tarefas() {
             
             {/* <Text style={styles.text}>NEW COMPONENT TASK</Text> */}
             {/* <Button title="Ir para Outra Tela" onPress={() => navigation.navigate("Compras")} /> */}
-            <TextInput
-                style={styles.input}
-                placeholder="Digite a descrição"
-                value={descricao}
-                onChangeText={setDescricao} 
-                />
-            <Pressable onPress={adicionarTarefa} style={({pressed}) => [styles.button, {opacity: pressed ? 0.5 : 1}]}>
-                <Text>Adicionar</Text>
-            </Pressable>
-            
+            <View style={styles.inputContainer} >
+                <TextInput
+                    style={styles.input}
+                    placeholder="Digite a descrição"
+                    value={descricao}
+                    onChangeText={setDescricao} 
+                    />
+                <Pressable onPress={adicionarTarefa} style={({pressed}) => [styles.button, {opacity: pressed ? 0.5 : 1}]}>
+                    <Text>Salvar</Text>
+                </Pressable>
+            </View>
+
             {/* Lista */}
             <View style={styles.lista}>
                 <Text style={styles.titulo}>Minhas Tarefas</Text>
@@ -128,7 +130,15 @@ const styles = StyleSheet.create({
         // height: height * 0.3, // 30% da altura da tela
         // borderRadius: 10,
     },
+    inputContainer: {
+        marginTop: 20,
+        width: "90%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+    },
     lista: {
+        flex: 1,
         margin: 10,
         width:"90%", //percentual ao inves de dimension
     },
@@ -142,15 +152,20 @@ const styles = StyleSheet.create({
         height: 40, //fixo p nao causar problemas
         borderRadius: 10,
         padding: 10,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
     },
     button: {
         // margin: 20,
-        width: "80%",
+        width: "30%",
+        height: 40,
         padding: 10,
         backgroundColor: "#ffb703",
         borderRadius: 10,
         color: "#000",
         fontSize: 20,
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0,
     },
     titulo : {
         fontSize: 22,
