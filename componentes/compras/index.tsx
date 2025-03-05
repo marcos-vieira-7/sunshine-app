@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { View, Text, StatusBar, StyleSheet, Dimensions, TextInput, Button, Pressable, FlatList, Alert, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MaskedTextInput } from "react-native-mask-text";
+// import { MaskedTextInput } from "react-native-mask-text";
+import { TextInputMask } from 'react-native-masked-text';
 
 const { width, height } = Dimensions.get("window");
 
@@ -74,14 +75,27 @@ export default function Compras() {
                 value={nome}
                 onChangeText={setNome}
             />
-            <Text>Valor Unitário</Text>
+            <Text>Digite o valor</Text>
+            <TextInputMask
+                type={'money'}
+                options={{
+                precision: 2, // Quantos números após a vírgula
+                separator: ',', // Separador decimal
+                delimiter: '.', // Delimitador de milhar
+                }}
+                value={valorUnitario}
+                onChangeText={setValorUnitario}
+                style={styles.input}
+                placeholder="R$ 0,00"
+            />
+            {/* <Text>Valor Unitário</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Valor Unitário"
                 value={valorUnitario}
                 onChangeText={setValorUnitario}
                 keyboardType="numeric"
-            />
+            /> */}
             <Text>Quantidade</Text>
             <TextInput
                 style={styles.input}
