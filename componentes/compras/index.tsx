@@ -39,6 +39,29 @@ export default function Compras() {
     const calcularTotalGeral = () => {
         return itens.reduce((total, item) => total + item.valorUnitario * item.quantidade, 0);
     };
+
+    const removeItem = (id: string) => {
+        Alert.alert(
+            "Remover",
+            "Deseja remover esse item?",
+            [
+              {
+                text: "Não",
+                style: "cancel", // O botão de cancelar não faz nada
+              },
+              {
+                text: "Sim",
+                onPress: () => {
+                  // Agora sim, remove o item após a confirmação
+                  setItens((prevItens) => prevItens.filter((item) => item.id !== id));
+                },
+              },
+            ],
+            { cancelable: false }
+        );
+        // let _itens = itens.filter((item) => item.id !== id);
+        // setItens(_itens);
+    }
     
     return (
         <View style={styles.container}>
@@ -65,16 +88,18 @@ export default function Compras() {
                 keyboardType="numeric"
             />
 
-            <Button title="Adicionar Item" onPress={adicionarItem} />
+            <Pressable style={styles.botao} onPress={adicionarItem}><Text>Adicionar</Text></Pressable>
 
             <FlatList
                 data={itens}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item}) => (
-                    <View style={styles.item}>
-                        <Text style={styles.text}>{item.nome} - {item.quantidade} x R${item.valorUnitario.toFixed(2)}</Text>
-                        <Text style={styles.totalItem}>Total: R$ {(item.valorUnitario * item.quantidade).toFixed(2)}</Text>
-                    </View>
+                    <Pressable onLongPress={() => removeItem(item.id)}>
+                        <View style={styles.item}>
+                            <Text style={styles.text}>{item.nome} - {item.quantidade} x R${item.valorUnitario.toFixed(2)}</Text>
+                            <Text style={styles.totalItem}>Total: R$ {(item.valorUnitario * item.quantidade).toFixed(2)}</Text>
+                        </View>
+                    </Pressable>
                 )}
             />
 
@@ -102,6 +127,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "#ccc",
+    },
+    botao: {
+        backgroundColor: "#6200ee",
+        padding: 10,
+        borderRadius: 5,
+        color: "#fff",
     },
     item: {
         backgroundColor: "#6200ee",
