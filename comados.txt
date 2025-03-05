@@ -10,5 +10,8 @@ Instalar navegação entre componentes no React:
 Instalar os stacks de navegação:
     - npm install @react-navigation/stack
 
+Instalar lib de mascaras:
+    - npm install react-native-mask-text
+
 =====================
 - guardar novo objeto

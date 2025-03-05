@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, Text, StatusBar, StyleSheet, Dimensions, TextInput, Button, Pressable, FlatList, Alert, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MaskedTextInput } from "react-native-mask-text";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,7 +26,7 @@ export default function Compras() {
         const novoItem: Item = {
             id: Math.random().toString(),
             nome,
-            valorUnitario: parseFloat(valorUnitario),
+            valorUnitario: parseFloat(valorUnitario.replace(",", ".")),
             quantidade: parseInt(quantidade),
         };
 
@@ -66,13 +67,14 @@ export default function Compras() {
     return (
         <View style={styles.container}>
             <Text style={styles.titulo}>Lista de Compras</Text>
-
+            <Text>Descrição</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Nome do Item"
                 value={nome}
                 onChangeText={setNome}
             />
+            <Text>Valor Unitário</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Valor Unitário"
@@ -80,6 +82,7 @@ export default function Compras() {
                 onChangeText={setValorUnitario}
                 keyboardType="numeric"
             />
+            <Text>Quantidade</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Quantidade"
@@ -88,7 +91,7 @@ export default function Compras() {
                 keyboardType="numeric"
             />
 
-            <Pressable style={styles.botao} onPress={adicionarItem}><Text>Adicionar</Text></Pressable>
+            <Pressable style={styles.botao} onPress={adicionarItem}><Text style={styles.textBotao}>Adicionar</Text></Pressable>
 
             <FlatList
                 data={itens}
@@ -132,7 +135,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#6200ee",
         padding: 10,
         borderRadius: 5,
+    },
+    textBotao: {
         color: "#fff",
+        fontSize: 16,
+        textAlign: "center"
     },
     item: {
         backgroundColor: "#6200ee",
