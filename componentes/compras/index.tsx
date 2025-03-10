@@ -19,28 +19,61 @@ export default function Compras() {
     const [valorUnitario, setValorUnitario] = useState("");
     const [quantidade, setQuantidade] = useState("");
     const [itens, setItens] = useState<Item[]>([]);
+    const [valorTotal, setValorTotal] = useState(0);
 
     const adicionarItem = () => {
 
-        if (!nome || !valorUnitario || !quantidade) return;
+        console.log("Nome digitado:", nome);
+        console.log("Valor digitado:", valorUnitario);
+        console.log("Quantidade digitada:", quantidade);
 
+        // Verifique se os campos foram preenchidos
+        if (!nome.trim() || !valorUnitario.trim() || !quantidade.trim()) {
+            Alert.alert("Erro", "Preencha todos os campos corretamente.");
+            return;
+        }
+    
+        const parsedValorUnitario = parseFloat(valorUnitario.replace(/[^\d,]/g, "").replace(",", ".")); 
+        const parsedQuantidade = parseInt(quantidade);
+
+        console.log("Valor unitário convertido:", parsedValorUnitario);
+        console.log("Quantidade convertida:", parsedQuantidade);
+    
+        if (isNaN(parsedValorUnitario) || isNaN(parsedQuantidade)) {
+            Alert.alert("Erro", "Valor unitário ou quantidade inválidos.");
+            return;
+        }
+    
         const novoItem: Item = {
             id: Math.random().toString(),
             nome,
-            valorUnitario: parseFloat(valorUnitario.replace(",", ".")),
-            quantidade: parseInt(quantidade),
+            valorUnitario: parsedValorUnitario,
+            quantidade: parsedQuantidade,
         };
+        console.log("Novo item criado:", novoItem);
 
         setItens([...itens, novoItem]);
+        console.log("Itens atualizados:", itens);
+        
         setNome("");
         setValorUnitario("");
         setQuantidade("");
     };
 
+    useEffect(() => {
+        const total = itens.reduce((total, item) => {
+            if (isNaN(item.valorUnitario) || isNaN(item.quantidade)) {
+                return total; // Ignora itens inválidos
+            }
+            return total + item.valorUnitario * item.quantidade;
+        }, 0);
+    
+        setValorTotal(total);
+    }, [itens]);
 
-    const calcularTotalGeral = () => {
-        return itens.reduce((total, item) => total + item.valorUnitario * item.quantidade, 0);
-    };
+    // const calcularTotalGeral = () => {
+    //     return itens.reduce((total, item) => total + item.valorUnitario * item.quantidade, 0);
+    // };
 
     const removeItem = (id: string) => {
         Alert.alert(
@@ -113,14 +146,20 @@ export default function Compras() {
                 renderItem={({ item}) => (
                     <Pressable onLongPress={() => removeItem(item.id)}>
                         <View style={styles.item}>
-                            <Text style={styles.text}>{item.nome} - {item.quantidade} x R${item.valorUnitario.toFixed(2)}</Text>
-                            <Text style={styles.totalItem}>Total: R$ {(item.valorUnitario * item.quantidade).toFixed(2)}</Text>
+                            <Text style={styles.text}>
+                                {item.nome} - {item.quantidade} x R$ {isNaN(item.valorUnitario) ? "0.00" : item.valorUnitario.toFixed(2)}
+                            </Text>
+                            <Text style={styles.totalItem}>
+                                Total: R$ {isNaN(item.valorUnitario * item.quantidade) ? "0.00" : (item.valorUnitario * item.quantidade).toFixed(2)}
+                            </Text>
                         </View>
                     </Pressable>
                 )}
             />
 
-            <Text style={styles.totalGeral}>Total Geral: R$ {calcularTotalGeral().toFixed(2)}</Text>
+            <Text style={styles.totalGeral}>
+                Total Geral: R$ {isNaN(valorTotal) ? "0.00" : valorTotal.toFixed(2)}
+            </Text>
         </View>
     );
 }
