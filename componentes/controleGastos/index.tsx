@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { View, Text, StatusBar, StyleSheet, Dimensions, TextInput,
          Button, Pressable, FlatList, Alert, TouchableOpacity, Modal } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+//import lib icons for react native
+import { MaterialIcons } from '@expo/vector-icons';
 const { width, height } = Dimensions.get("window");
-
-
 
 export default function ControleGastos() {
     /* 
@@ -28,56 +27,6 @@ export default function ControleGastos() {
             descricao: "Aluguel",
             valor: 500
         },
-        {
-            id: 3,
-            descricao: "Internet",
-            valor: 50
-        },
-        {
-            id: 4,
-            descricao: "Game Pass",
-            valor: 39
-        },
-        {
-            id: 5,
-            descricao: "Lanches",
-            valor: 70
-        },
-        {
-            id: 6,
-            descricao: "Água",
-            valor: 70
-        },
-        {
-            id: 7,
-            descricao: "Pizzas",
-            valor: 50
-        },
-        {
-            id: 8,
-            descricao: "Internet",
-            valor: 50
-        },
-        {
-            id: 9,
-            descricao: "Game Pass",
-            valor: 39
-        },
-        {
-            id: 10,
-            descricao: "Lanches",
-            valor: 70
-        },
-        {
-            id: 11,
-            descricao: "Água",
-            valor: 70
-        },
-        {
-            id: 12,
-            descricao: "Pizzas",
-            valor: 50
-        }
     ]);
 
 
@@ -138,6 +87,11 @@ export default function ControleGastos() {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modal}>
+                        {/* Ícone de fechar */}
+                        <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+                            <MaterialIcons name="close" size={24} color="black" />
+                        </TouchableOpacity>
+                        
                         <Text>Descrição</Text>
                         <TextInput
                             style={styles.input}
@@ -160,10 +114,6 @@ export default function ControleGastos() {
                 </View>
             </Modal>
 
-            {/* <Pressable style={styles.botao} onPress={null} >
-                <Text style={styles.textBotao}>Cadastrar</Text>
-            </Pressable> */}
-
             <FlatList
                 data={gastos}
                 keyExtractor={(item: any) => item.id}
@@ -175,15 +125,6 @@ export default function ControleGastos() {
                 )}
                 contentContainerStyle={{ paddingBottom: 20 }}
             />
-
-            {/* <View style={styles.listagem}>
-            {gastos.map((item) => (
-                <View style={styles.card}>
-                    <Text style={styles.titulo}>{item.descricao}</Text>
-                    <Text style={styles.titulo}>{item.valor}</Text>
-                </View>
-            ))}
-            </View> */}
 
         </View>
     )
@@ -224,6 +165,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "#ccc",
+        width: "80%",
     },
     botao: {
         backgroundColor: "#6200ee",
@@ -272,5 +214,9 @@ const styles = StyleSheet.create({
     textoModal: {
         fontSize: 18,
         marginBottom: 10,
+    },
+    closeButton: {
+        alignSelf: "flex-end",
+        padding: 5,
     },
 });

@@ -14,5 +14,9 @@ Instalar lib de mascaras:
     - npm install react-native-mask-text
     (NOVO)-npm install react-native-masked-text
 
+Instalar icones react native:
+    - npm install react-native-vector-icons
+
 =====================
 - guardar novo objeto
+
