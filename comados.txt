@@ -17,6 +17,12 @@ Instalar lib de mascaras:
 Instalar icones react native:
     - npm install react-native-vector-icons
 
+Instalar EAS cli
+    - npm install -g eas-cli
+
+Gerar APK expo:
+    - eas build -p android --profile preview
+
 =====================
 - guardar novo objeto
 
