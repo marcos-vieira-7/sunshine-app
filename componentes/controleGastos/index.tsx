@@ -4,6 +4,8 @@ import { View, Text, StatusBar, StyleSheet, Dimensions, TextInput,
 import AsyncStorage from "@react-native-async-storage/async-storage";
 //import lib icons for react native
 import { MaterialIcons } from '@expo/vector-icons';
+import { TextInputMask } from 'react-native-masked-text';
+
 const { width, height } = Dimensions.get("window");
 
 export default function ControleGastos() {
@@ -30,6 +32,17 @@ export default function ControleGastos() {
     ]);
 
 
+    useEffect(() => {
+        const total = gastos.reduce((total, item) => {
+            if (isNaN(item.valor)) {
+                return total; // Ignora itens inválidos
+            }
+            return total + item.valor;
+        }, 0);
+    
+        setTotalGastos(total);
+    }, [gastos]);
+
     const salvarNovoGasto = () => {
 
         if (!descricao.trim() || !valor.trim()) {
@@ -37,13 +50,23 @@ export default function ControleGastos() {
             return;
         }
 
+        const parsedValor = parseFloat(valor.replace(/[^\d,]/g, "").replace(",", ".")); //converte moeda para float
+
+        if (isNaN(parsedValor)) {
+            Alert.alert("Erro", "Valor inválido.");
+            return;
+        }
+
         const novoGasto = {
             id: gastos.length + 1,
             descricao: descricao,
-            valor: parseFloat(valor)
+            valor: parsedValor
         };
+
         setGastos([...gastos, novoGasto]);
-        setModalVisible(false)
+        setModalVisible(false);
+        setDescricao("");
+        setValor("");
     }
 
     const removeGasto = (id: any) => {
@@ -69,6 +92,11 @@ export default function ControleGastos() {
         // setItens(_itens);
     }
 
+    const limpaForm = () => {
+        setDescricao("");
+        setValor("");
+    }
+
     return(
         <View style={styles.container}>
 
@@ -77,6 +105,10 @@ export default function ControleGastos() {
             <TouchableOpacity style={styles.botao} onPress={() => setModalVisible(true)}>
                 <Text style={styles.textBotao}>Cadastrar</Text>
             </TouchableOpacity>
+
+            <Text style={styles.totalGeral}>
+                Total Geral: R$ {isNaN(totalGastos) ? "0.00" : totalGastos.toFixed(2)}
+            </Text>
 
             {/* Modal */}
             <Modal
@@ -88,10 +120,11 @@ export default function ControleGastos() {
                 <View style={styles.modalContainer}>
                     <View style={styles.modal}>
                         {/* Ícone de fechar */}
-                        <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+                        <TouchableOpacity onPress={() => [setModalVisible(false), limpaForm()]} style={styles.closeButton}>
                             <MaterialIcons name="close" size={24} color="black" />
                         </TouchableOpacity>
-                        
+                        <Text style={styles.modalTitle}>Novo Gasto</Text>
+
                         <Text>Descrição</Text>
                         <TextInput
                             style={styles.input}
@@ -101,12 +134,24 @@ export default function ControleGastos() {
                         />
 
                         <Text>Valor</Text>
-                        <TextInput
+                        <TextInputMask
+                            type={'money'}
+                            options={{
+                            precision: 2, // Quantos números após a vírgula
+                            separator: ',', // Separador decimal
+                            delimiter: '.', // Delimitador de milhar
+                            }}
+                            value={valor}
+                            onChangeText={setValor}
+                            style={styles.input}
+                            placeholder="R$ 0,00"
+                        />
+                        {/* <TextInput
                             style={styles.input}
                             placeholder="Nome do Item"
                             value={valor}
                             onChangeText={setValor}
-                        />
+                        /> */}
                         <Button title="Salvar" onPress={() => salvarNovoGasto()} />
 
                         {/* <Button title="Fechar" onPress={() => setModalVisible(false)} /> */}
@@ -134,9 +179,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1, // Ocupa toda a tela
         padding: 20,
-        backgroundColor: "#f4f4f4",
+        backgroundColor: "#f9c74f",
     },
     card: {
+        backgroundColor: "#5aa9e6",
         borderColor: "#6200ee",
         borderWidth: 1,
         marginBottom: 10,
@@ -146,7 +192,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#8ecae6",
         height: 150,
     },
     listagem: {
@@ -168,7 +213,7 @@ const styles = StyleSheet.create({
         width: "80%",
     },
     botao: {
-        backgroundColor: "#6200ee",
+        backgroundColor: "#57cc99",
         padding: 10,
         borderRadius: 5,
         marginBottom: 20,
@@ -195,7 +240,8 @@ const styles = StyleSheet.create({
     totalGeral: {
         fontSize: 20,
         fontWeight: "bold",
-        marginTop: 20,
+        marginTop: 10,
+        marginBottom: 20,
         textAlign: "center",
     },
     modalContainer: {
@@ -205,8 +251,8 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.5)", // Fundo escuro semi-transparente
     },
     modal: {
-        backgroundColor: "#fff",
-        padding: 20,
+        backgroundColor: "#f9c74f",
+        padding: 10,
         borderRadius: 10,
         width: "80%",
         alignItems: "center",
@@ -219,4 +265,8 @@ const styles = StyleSheet.create({
         alignSelf: "flex-end",
         padding: 5,
     },
+    modalTitle: {
+        fontSize: 25,
+
+    }
 });
