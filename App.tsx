@@ -14,16 +14,11 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        {/* <Stack.Screen name="Tarefas" component={Tarefas} /> */}
-        {/* <Stack.Screen name="Compras" component={Compras} /> */}
-        <Stack.Screen name="ControleGastos" component={ControleGastos} />
-      </Stack.Navigator>
-    </NavigationContainer>
-    // <View style={styles.container}>
-    //   <Tarefas/>
-    // </View>
+    <View style={styles.container}>
+      {/* <Stack.Screen name="Tarefas" component={Tarefas} /> */}
+      {/* <Stack.Screen name="Compras" component={Compras} /> */}
+      <ControleGastos />
+    </View>
   );
 }
 
@@ -31,7 +26,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
 });

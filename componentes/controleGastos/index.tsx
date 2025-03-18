@@ -37,6 +37,9 @@ export default function ControleGastos() {
             if (isNaN(item.valor)) {
                 return total; // Ignora itens inválidos
             }
+            
+            console.log("valor item:", item.valor);
+
             return total + item.valor;
         }, 0);
     
@@ -107,7 +110,12 @@ export default function ControleGastos() {
             </TouchableOpacity>
 
             <Text style={styles.totalGeral}>
-                Total Geral: R$ {isNaN(totalGastos) ? "0.00" : totalGastos.toFixed(2)}
+                {/* Total Geral: R$ {isNaN(totalGastos) ? "0.00" : totalGastos.toFixed(2)} */}
+                {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                }).format(totalGastos)}
+
             </Text>
 
             {/* Modal */}
@@ -165,7 +173,12 @@ export default function ControleGastos() {
                 renderItem={({ item }) => (
                     <Pressable style={styles.card} onLongPress={() => removeGasto(item.id)}>
                         <Text style={styles.titulo}>{item.descricao}</Text>
-                        <Text style={styles.titulo}>{item.valor}</Text>
+                        <Text style={styles.titulo}>
+                            {new Intl.NumberFormat("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                            }).format(item.valor)}
+                        </Text>
                     </Pressable>
                 )}
                 contentContainerStyle={{ paddingBottom: 20 }}
