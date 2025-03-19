@@ -18,19 +18,12 @@ export default function ControleGastos() {
     const [valor, setValor] = useState("");
 
     const [totalGastos, setTotalGastos] = useState(0);
-    const [gastos, setGastos] = useState<{id: number, descricao: string, valor: number}[]>([
-        {
-            id: 1,
-            descricao: "Compras",
-            valor: 100
-        },
-        {
-            id: 2,
-            descricao: "Aluguel",
-            valor: 500
-        },
-    ]);
+    const [gastos, setGastos] = useState<{id: number, descricao: string, valor: number}[]>([]);
 
+
+    useEffect(() => {
+        carregarGastos();
+    }, []);
 
     useEffect(() => {
         const total = gastos.reduce((total, item) => {
@@ -46,7 +39,26 @@ export default function ControleGastos() {
         setTotalGastos(total);
     }, [gastos]);
 
-    const salvarNovoGasto = () => {
+    const carregarGastos = async () => {
+        try {
+            const gastosSalvos = await AsyncStorage.getItem("@gastos");
+            if(gastosSalvos){
+                setGastos(JSON.parse(gastosSalvos));
+            }
+        } catch (error) {
+            console.error("Erro ao carregar os itens:", error);
+        }
+    }
+
+    const salvarGastos = async (novaLista: any[]) => {
+        try {
+            await AsyncStorage.setItem("@gastos", JSON.stringify(novaLista));
+        } catch(error){
+            console.error("Erro ao salvar gastos:", error);
+        }
+    }
+
+    const salvarNovoGasto = async() => {
 
         if (!descricao.trim() || !valor.trim()) {
             Alert.alert("Erro", "Preencha todos os campos corretamente.");
@@ -66,13 +78,16 @@ export default function ControleGastos() {
             valor: parsedValor
         };
 
-        setGastos([...gastos, novoGasto]);
+        const novaLista = [...gastos, novoGasto];
+        setGastos(novaLista);
         setModalVisible(false);
         setDescricao("");
         setValor("");
+
+        await salvarGastos(novaLista); //salva no asyncStorage
     }
 
-    const removeGasto = (id: any) => {
+    const removeGasto = async(id: any) => {
         Alert.alert(
             "Remover",
             "Deseja remover esse item?",
@@ -83,16 +98,16 @@ export default function ControleGastos() {
               },
               {
                 text: "Sim",
-                onPress: () => {
+                onPress: async() => {
                   // Agora sim, remove o item após a confirmação
-                  setGastos((prevItens) => prevItens.filter((item:any) => item.id !== id));
+                  const novaLista = gastos.filter((item:any) => item.id !== id);
+                  setGastos(novaLista);
+                  await salvarGastos(novaLista);
                 },
               },
             ],
             { cancelable: false }
         );
-        // let _itens = itens.filter((item) => item.id !== id);
-        // setItens(_itens);
     }
 
     const limpaForm = () => {
@@ -205,7 +220,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         justifyContent: "center",
         alignItems: "center",
-        height: 150,
+        height: 100,
     },
     listagem: {
         overflow: "scroll",
@@ -214,6 +229,7 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: "bold",
         marginBottom: 10,
+        marginTop: 10,
         textAlign: "center",
     },
     input: {
